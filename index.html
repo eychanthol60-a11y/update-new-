@@ -361,8 +361,8 @@
     </div>
 
     <div class="form-group">
-      <label>ជ្រើសរើស ឬវាយបញ្ចូលក្រុម (Group)</label>
-      <input type="text" list="groupList" id="groupSelect" placeholder="-- សូមរង់ចាំ ទាញយកទិន្នន័យ... --" autocomplete="off" oninput="loadMembers()">
+      <label>ជ្រើសរើស ឬ វាយបញ្ចូលក្រុម (Group)</label>
+      <input list="groupList" id="groupSelect" placeholder="-- សូមរង់ចាំ ទាញយកទិន្នន័យ... --" autocomplete="off" oninput="loadMembers()">
       <datalist id="groupList"></datalist>
     </div>
 
@@ -689,6 +689,7 @@
       return result.map(s => s.replace(/^"|"$/g, '').trim());
     }
 
+    // [UPDATED] កូដឆ្លាតវៃ ទាញយកតែតាមក្បាលជួរពណ៌ទឹកក្រូច ការពារការអូសខុសក្នុង Sheet
     function parseCSV(csvText) {
       const rows = csvText.split(/\r?\n/);
       allSheetData = [];
@@ -696,6 +697,7 @@
 
       let groupIdx = 0, nameIdx = 1, userIdx = 2;
       let headerFound = false;
+      let currentSectionGroup = ""; // កត់ត្រាទុកនូវក្បាលជួរពណ៌ទឹកក្រូច
 
       for (let i = 0; i < rows.length; i++) {
         if (!rows[i].trim()) continue;
@@ -716,23 +718,34 @@
           }
         }
 
-        if (headerFound || i > 0) {
-          let group = cols[groupIdx] ? cols[groupIdx] : "";
-          let name = cols[nameIdx] ? cols[nameIdx] : "";
-          let username = cols[userIdx] ? cols[userIdx] : "";
+        // ស្វែងរកក្បាលជួរក្រុម (ពណ៌ទឹកក្រូច) ដោយវាមានពាក្យ "ក្រុម" តែមិនមានសញ្ញា @ ទេ
+        let possibleHeader = cols.find(c => c.trim().startsWith("ក្រុម") && c.trim().length <= 25);
+        let hasAtSymbol = rows[i].includes("@"); 
+        
+        if (possibleHeader && !hasAtSymbol) {
+          currentSectionGroup = possibleHeader.trim();
+          continue; 
+        }
 
-          if (group && !group.includes("ក្រុម") && !group.toLowerCase().includes("group")) {
-            group = "ក្រុម " + group; 
+        if (headerFound || i > 0) {
+          let rowGroup = cols[groupIdx] ? cols[groupIdx].trim() : "";
+          let name = cols[nameIdx] ? cols[nameIdx].trim() : "";
+          let username = cols[userIdx] ? cols[userIdx].trim() : "";
+
+          // ប្រើក្បាលជួរពណ៌ទឹកក្រូចជាចម្បង ទោះបីជាជួរឈរមានអក្សរ C14 ក៏ដោយ!
+          let finalGroup = currentSectionGroup || rowGroup;
+
+          if (finalGroup && !finalGroup.includes("ក្រុម") && !finalGroup.toLowerCase().includes("group")) {
+            finalGroup = "ក្រុម " + finalGroup; 
           }
 
-          if (group && name && !name.includes("ឈ្មោះ")) {
-            allSheetData.push({ group, name, username });
-            groups.add(group);
+          if (finalGroup && name && !name.includes("ឈ្មោះ") && name.toLowerCase() !== "name") {
+            allSheetData.push({ group: finalGroup, name, username });
+            groups.add(finalGroup);
           }
         }
       }
 
-      // បញ្ចូលទិន្នន័យក្រុមទៅក្នុង Datalist
       const groupInput = document.getElementById('groupSelect');
       const groupList = document.getElementById('groupList');
       groupList.innerHTML = ``;
@@ -756,18 +769,16 @@
         return;
       }
 
-      // ឆែកមើលក្រែងលោអ្នកប្រើប្រាស់វាយតែ "A1" (មិនមានពាក្យ "ក្រុម ")
       let members = allSheetData.filter(m => m.group.toLowerCase() === selectedGroup.toLowerCase());
       
       if (members.length === 0) {
         let prefixed = "ក្រុម " + selectedGroup;
         members = allSheetData.filter(m => m.group.toLowerCase() === prefixed.toLowerCase());
         if(members.length > 0) {
-          selectedGroup = members[0].group; // តម្រឹមឈ្មោះឲ្យត្រូវពេញលេញវិញ
+          selectedGroup = members[0].group; 
         }
       }
 
-      // បើនៅតែរកមិនឃើញក្រុមដែលវាយបញ្ចូល
       if (members.length === 0) {
         memberBox.style.display = 'none';
         actionBtn.innerText = "មិនមានក្រុមនេះទេ (កំពុងស្វែងរក...)";
@@ -870,7 +881,6 @@
     function submitReport() {
       let groupValue = document.getElementById('groupSelect').value.trim();
       
-      // ការពារករណីវាយតែ A1 អោយលោតយក "ក្រុម A1" ដោយស្វ័យប្រវត្តិពេល Submit
       let exactGroup = allSheetData.find(m => m.group.toLowerCase() === groupValue.toLowerCase() || m.group.toLowerCase() === ("ក្រុម " + groupValue).toLowerCase());
       
       if (!exactGroup) {
