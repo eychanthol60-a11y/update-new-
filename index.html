@@ -3,8 +3,8 @@
 <html lang="km">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ប្រព័ន្ធរបាយការណ៍ - Searchable Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>ប្រព័ន្ធរបាយការណ៍ - Mobile Optimized</title>
   <style>
     body {
       font-family: 'Khmer OS Battambang', 'Segoe UI', sans-serif;
@@ -33,6 +33,7 @@
       padding: 40px;
       width: 100%;
       max-width: 520px;
+      box-sizing: border-box;
       text-align: center;
       border: 5px solid transparent;
       border-radius: 20px;
@@ -97,6 +98,7 @@
       background-clip: padding-box, border-box;
       background-size: 400% 400%;
       animation: rainbowMove 2s linear infinite;
+      box-sizing: border-box;
     }
     .btn-action:hover { transform: translateY(-3px); }
 
@@ -117,6 +119,7 @@
       background-clip: padding-box, border-box;
       background-size: 400% 400%;
       animation: rainbowMove 2s linear infinite;
+      box-sizing: border-box;
     }
 
     .simple-report-box {
@@ -149,7 +152,7 @@
     /* ====== LOGIN / ADMIN UI ====== */
     #loginPage, #adminPage, #appPage { display: none; }
     .topbar { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom: 10px; }
-    .user-badge { font-weight:bold; color:#764ba2; text-align:left; }
+    .user-badge { font-weight:bold; color:#764ba2; text-align:left; word-break: break-all;}
     .btn-logout {
       width:auto; padding:10px 14px; font-size:14px;
       border-radius:10px; border:3px solid transparent; cursor:pointer;
@@ -244,6 +247,45 @@
       display: none;
       border: 1px solid #ff4757;
       border-radius: 5px;
+    }
+
+    /* =========================================
+       ផ្នែកតម្រូវសម្រាប់ទូរស័ព្ទដៃ (Responsive CSS) 
+       ========================================= */
+    @media (max-width: 600px) {
+      body {
+        padding: 15px 10px; /* បន្ថយគម្លាតខាងក្រៅ */
+      }
+      .container {
+        padding: 25px 15px; /* បន្ថយគម្លាតក្នុងប្រអប់ដើម្បីឲ្យទូលាយ */
+        border-width: 3px;  /* បន្ថយកម្រាស់បន្ទាត់ពណ៌ */
+        border-radius: 15px;
+      }
+      .rainbow-text {
+        font-size: 24px; /* បន្ថយទំហំអក្សរចំណងជើង */
+        margin-bottom: 15px;
+      }
+      input, select {
+        padding: 10px 12px;
+        font-size: 15px;
+      }
+      .btn-action, .btn-copy {
+        padding: 12px 20px;
+        font-size: 16px;
+      }
+      .member-list-box {
+        padding: 10px;
+      }
+      .member-info {
+        font-size: 14px;
+      }
+      .btn-att {
+        padding: 6px 10px;
+        font-size: 13px;
+      }
+      .simple-report-box {
+        padding: 15px;
+      }
     }
   </style>
 </head>
@@ -689,7 +731,6 @@
       return result.map(s => s.replace(/^"|"$/g, '').trim());
     }
 
-    // [UPDATED] កូដឆ្លាតវៃ ទាញយកតែតាមក្បាលជួរពណ៌ទឹកក្រូច ការពារការអូសខុសក្នុង Sheet
     function parseCSV(csvText) {
       const rows = csvText.split(/\r?\n/);
       allSheetData = [];
@@ -697,7 +738,7 @@
 
       let groupIdx = 0, nameIdx = 1, userIdx = 2;
       let headerFound = false;
-      let currentSectionGroup = ""; // កត់ត្រាទុកនូវក្បាលជួរពណ៌ទឹកក្រូច
+      let currentSectionGroup = ""; 
 
       for (let i = 0; i < rows.length; i++) {
         if (!rows[i].trim()) continue;
@@ -718,7 +759,6 @@
           }
         }
 
-        // ស្វែងរកក្បាលជួរក្រុម (ពណ៌ទឹកក្រូច) ដោយវាមានពាក្យ "ក្រុម" តែមិនមានសញ្ញា @ ទេ
         let possibleHeader = cols.find(c => c.trim().startsWith("ក្រុម") && c.trim().length <= 25);
         let hasAtSymbol = rows[i].includes("@"); 
         
@@ -732,7 +772,6 @@
           let name = cols[nameIdx] ? cols[nameIdx].trim() : "";
           let username = cols[userIdx] ? cols[userIdx].trim() : "";
 
-          // ប្រើក្បាលជួរពណ៌ទឹកក្រូចជាចម្បង ទោះបីជាជួរឈរមានអក្សរ C14 ក៏ដោយ!
           let finalGroup = currentSectionGroup || rowGroup;
 
           if (finalGroup && !finalGroup.includes("ក្រុម") && !finalGroup.toLowerCase().includes("group")) {
