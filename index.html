@@ -1,0 +1,995 @@
+
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ប្រព័ន្ធរបាយការណ៍ - Searchable Edition</title>
+  <style>
+    body {
+      font-family: 'Khmer OS Battambang', 'Segoe UI', sans-serif;
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab, #ff9a44);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      margin: 0;
+      padding: 40px 20px;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes rainbowMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+      border: 5px solid transparent;
+      border-radius: 20px;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)),
+        linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      background-size: 400% 400%;
+      animation: rainbowMove 5s ease infinite;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+    .rainbow-text {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      background-image: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      background-size: 400% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: rainbowMove 3s linear infinite;
+      display: inline-block;
+    }
+    .form-group { margin-bottom: 15px; text-align: left; }
+    label { display: block; margin-bottom: 8px; color: #666; font-weight: bold; }
+    input, select {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 16px;
+      font-family: inherit;
+      outline: none;
+      box-sizing: border-box;
+      transition: 0.3s;
+      margin-bottom: 5px;
+      border: 3px solid transparent;
+      border-radius: 10px;
+      background-image:
+        linear-gradient(#fff, #fff),
+        linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      background-size: 400% 400%;
+      animation: rainbowMove 3s linear infinite;
+    }
+    input:focus, select:focus { animation: rainbowMove 1s linear infinite; box-shadow: 0 0 15px rgba(118, 75, 162, 0.3); }
+
+    .btn-action {
+      background-image:
+        linear-gradient(135deg, #667eea 0%, #764ba2 100%),
+        linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      color: white;
+      border: 3px solid transparent;
+      padding: 15px 30px;
+      border-radius: 12px;
+      font-size: 18px;
+      cursor: pointer;
+      width: 100%;
+      font-family: inherit;
+      margin-top: 10px;
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      background-size: 400% 400%;
+      animation: rainbowMove 2s linear infinite;
+    }
+    .btn-action:hover { transform: translateY(-3px); }
+
+    .btn-copy {
+      background-image:
+        linear-gradient(135deg, #11998e 0%, #38ef7d 100%),
+        linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      color: white;
+      border: 3px solid transparent;
+      padding: 15px 30px;
+      border-radius: 12px;
+      font-size: 18px;
+      cursor: pointer;
+      width: 100%;
+      font-family: inherit;
+      margin-top: 15px;
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      background-size: 400% 400%;
+      animation: rainbowMove 2s linear infinite;
+    }
+
+    .simple-report-box {
+      margin-top: 30px;
+      text-align: left;
+      padding: 20px;
+      min-height: 150px;
+      max-height: 400px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      border: 3px solid transparent;
+      border-radius: 10px;
+      background-image:
+        linear-gradient(#fdfdfd, #fdfdfd),
+        linear-gradient(120deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      background-size: 400% 400%;
+      animation: rainbowMove 4s linear infinite;
+    }
+
+    .report-header-date { color: #764ba2; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #764ba2; white-space: pre-wrap; line-height: 1.5; }
+    .report-footer { margin-top: auto; padding-top: 15px; border-top: 2px solid #764ba2; text-align: center; color: #764ba2; font-weight: bold; }
+    .report-line { padding: 10px 0; border-bottom: 1px dashed #ddd; display: flex; justify-content: space-between; align-items: flex-start; }
+    .text-content { flex-grow: 1; padding: 5px; outline: none; line-height: 1.8; white-space: pre-wrap; font-size: 16px; }
+    .text-content:focus { background-color: #fffde7; border: 1px dashed #f1c40f; border-radius: 5px;}
+    .delete-btn { background: none; border: none; color: #ff4757; cursor: pointer; font-size: 14px; margin-top: 5px;}
+
+    /* ====== LOGIN / ADMIN UI ====== */
+    #loginPage, #adminPage, #appPage { display: none; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom: 10px; }
+    .user-badge { font-weight:bold; color:#764ba2; text-align:left; }
+    .btn-logout {
+      width:auto; padding:10px 14px; font-size:14px;
+      border-radius:10px; border:3px solid transparent; cursor:pointer;
+      color:white;
+      background-image:
+        linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%),
+        linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      background-origin:border-box; background-clip:padding-box,border-box;
+      background-size:400% 400%; animation: rainbowMove 2s linear infinite;
+      white-space: nowrap;
+    }
+    .muted { color:#666; font-size:14px; line-height:1.7; text-align:left; }
+    .tabs { display:flex; gap:10px; margin-top:10px; }
+    .tabbtn{
+      flex:1; padding:10px; border-radius:10px; cursor:pointer; border:3px solid transparent;
+      background:#f0f0f0; font-family:inherit; font-weight:bold; color:#555;
+    }
+    .tabbtn.active{
+      color:#fff;
+      background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .admin-box{
+      margin-top:15px; padding:15px; border-radius:12px; text-align:left;
+      border:2px dashed #764ba2; background:#fbfbff;
+    }
+    table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
+    th, td{ border-bottom:1px dashed #ddd; padding:8px; text-align:left; }
+    th{ color:#764ba2; }
+    .smallbtn{
+      padding:6px 10px; border-radius:8px; border:none; cursor:pointer;
+      font-family:inherit; font-weight:bold; color:#fff;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      margin-right:6px;
+    }
+    .smallbtn.danger{ background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); }
+    .link-btn { color:#764ba2; font-weight:bold; text-decoration:none; cursor:pointer; }
+    .link-btn:hover { text-decoration:underline; }
+
+    /* ====== ផ្នែកបញ្ជីសមាជិក ====== */
+    .member-list-box {
+      background: #fbfbff;
+      border: 2px dashed #764ba2;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: left;
+      max-height: 350px;
+      overflow-y: auto;
+      display: none; 
+    }
+    .member-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed #ccc;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .member-row:last-child {
+      border-bottom: none;
+    }
+    .member-info {
+      flex: 1;
+      font-size: 15px;
+      color: #333;
+    }
+    .member-actions {
+      display: flex;
+      gap: 5px;
+    }
+    .btn-att {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .btn-att.present { background: #e0e0e0; color: #555; }
+    .btn-att.present.active { background: #2ed573; color: white; box-shadow: 0 2px 8px rgba(46,213,115,0.4); }
+    
+    .btn-att.absent { background: #e0e0e0; color: #555; }
+    .btn-att.absent.active { background: #ff4757; color: white; box-shadow: 0 2px 8px rgba(255,71,87,0.4); }
+    
+    .absent-reason-input {
+      width: 100%;
+      margin-top: 5px;
+      padding: 6px;
+      font-size: 13px;
+      display: none;
+      border: 1px solid #ff4757;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="loginPage">
+    <h1 class="rainbow-text">🔐 Login ចូលប្រើប្រាស់</h1>
+
+    <div class="tabs">
+      <button class="tabbtn active" id="tabUser" onclick="switchLoginTab('user')">User Login</button>
+      <button class="tabbtn" id="tabAdmin" onclick="switchLoginTab('admin')">Admin Login</button>
+    </div>
+
+    <div id="userLoginForm" style="margin-top:15px;">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="loginUser" placeholder="បញ្ចូល Username..." autocomplete="off" autocapitalize="off" spellcheck="false">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="បញ្ចូល Password...">
+      </div>
+      <button class="btn-action" onclick="doUserLogin()">ចូល (User Login)</button>
+      <div class="muted" style="margin-top: 15px; text-align: center;">
+        មិនទាន់មានគណនី? <a class="link-btn" onclick="toggleRegister(true)">បង្កើតថ្មីទីនេះ (Register)</a>
+      </div>
+    </div>
+
+    <div id="userRegisterForm" style="margin-top:15px; display:none;">
+      <div class="form-group">
+        <label>Username ថ្មី</label>
+        <input type="text" id="regUser" placeholder="បញ្ចូល Username ថ្មី..." autocomplete="off" autocapitalize="off" spellcheck="false">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="regPass" placeholder="បញ្ចូល Password...">
+      </div>
+      <div class="form-group">
+        <label>បញ្ជាក់ Password</label>
+        <input type="password" id="regPassConfirm" placeholder="បញ្ចូល Password ម្តងទៀត...">
+      </div>
+      <button class="btn-action" onclick="doUserRegister()" style="background-image: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">បង្កើតគណនី (Sign Up)</button>
+      <div class="muted" style="margin-top: 15px; text-align: center;">
+        មានគណនីរួចហើយ? <a class="link-btn" onclick="toggleRegister(false)">ចូលប្រើប្រាស់ទីនេះ (Login)</a>
+      </div>
+    </div>
+
+    <div id="adminLoginForm" style="margin-top:15px; display:none;">
+      <div class="form-group">
+        <label>Admin Password</label>
+        <input type="password" id="adminPass" placeholder="បញ្ចូល Admin Password...">
+      </div>
+      <button class="btn-action" onclick="doAdminLogin()">ចូល (Admin Login)</button>
+    </div>
+  </div>
+
+  <div class="container" id="adminPage">
+    <div class="topbar">
+      <div class="user-badge">🛠️ Admin Panel</div>
+      <button class="btn-logout" onclick="logoutAdmin()">ចាកចេញ (Logout)</button>
+    </div>
+
+    <h1 class="rainbow-text" style="margin-top:0;">គ្រប់គ្រង User</h1>
+
+    <div class="admin-box">
+      <b>1) បន្ថែម User ថ្មី</b>
+      <div class="form-group" style="margin-top:10px;">
+        <label>Username ថ្មី</label>
+        <input type="text" id="newUser" placeholder="ឧ: User01">
+      </div>
+      <div class="form-group">
+        <label>Password ថ្មី</label>
+        <input type="text" id="newPass" placeholder="បញ្ចូល Password..." autocomplete="off">
+      </div>
+      <button class="btn-copy" onclick="addUser()">+ បន្ថែម User</button>
+    </div>
+
+    <div class="admin-box">
+      <b>2) កែប្រែ Password User</b>
+      <div class="form-group" style="margin-top:10px;">
+        <label>ជ្រើសរើស Username</label>
+        <select id="editUserSelect"></select>
+      </div>
+      <div class="form-group">
+        <label>Password ថ្មី</label>
+        <input type="text" id="editPass" placeholder="បញ្ចូល Password ថ្មី..." autocomplete="off">
+      </div>
+      <button class="btn-copy" onclick="updateUserPassword()">✅ កែប្រែ Password</button>
+    </div>
+
+    <div class="admin-box">
+      <b>3) បញ្ជី Users</b>
+      <div class="muted">ចំណាំ៖ គណនីដែល User បង្កើតដោយខ្លួនឯង ក៏នឹងបង្ហាញនៅទីនេះដែរ។</div>
+      <div id="userTableWrap"></div>
+    </div>
+
+    <button class="btn-action" onclick="goToUserLogin()">ត្រឡប់ទៅ User Login</button>
+  </div>
+
+  <div class="container" id="appPage">
+    <div class="topbar">
+      <div class="user-badge" id="userBadge"></div>
+      <button class="btn-logout" onclick="logoutUser()">ចាកចេញ (Logout)</button>
+    </div>
+
+    <h1 class="rainbow-text">ស្រង់របាយការណ៍តាមក្រុម</h1>
+
+    <div class="form-group">
+      <label>ជ្រើសរើសពេល (Time)</label>
+      <select id="timeSelect" onchange="updateHeader()">
+        <option value="(ពេលព្រឹក)">ពេលព្រឹក</option>
+        <option value="(ពេលរសៀល)" selected>ពេលរសៀល</option>
+        <option value="(ពេលយប់)">ពេលយប់</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>ជ្រើសរើស ឬវាយបញ្ចូលក្រុម (Group)</label>
+      <input type="text" list="groupList" id="groupSelect" placeholder="-- សូមរង់ចាំ ទាញយកទិន្នន័យ... --" autocomplete="off" oninput="loadMembers()">
+      <datalist id="groupList"></datalist>
+    </div>
+
+    <div id="memberListBox" class="member-list-box">
+    </div>
+
+    <datalist id="reasonOptions">
+      <option value="ច្បាប់ឈឺ">
+      <option value="ច្បាប់ទៅផ្ទះ">
+      <option value="ច្បាប់ទៅក្រៅ">
+      <option value="ច្បាប់ទៅប្រឡង">
+    </datalist>
+
+    <button id="actionBtn" class="btn-action" onclick="submitReport()">សូមវាយបញ្ចូលឈ្មោះក្រុមជាមុនសិន</button>
+
+    <div id="reportContainer" class="simple-report-box">
+      <div id="dateHeader" class="report-header-date"></div>
+      <div id="reportFooter" class="report-footer"> សូមអរគុណ🙏🙏🙏</div>
+    </div>
+
+    <button class="btn-copy" onclick="copyReport()">ចម្លងរបាយការណ៍ (Copy Report)</button>
+  </div>
+
+  <script>
+    /* ========= STORAGE KEYS ========= */
+    const USER_KEY = "appUsers";              
+    const AUTH_USER_KEY = "isLoggedIn";       
+    const LOGGED_USER_KEY = "loggedUser";     
+    const AUTH_ADMIN_KEY = "isAdminLoggedIn"; 
+
+    function clearLoginInputs() {
+      const ids = ["loginUser", "loginPass", "adminPass", "newPass", "editPass", "regUser", "regPass", "regPassConfirm"];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+      });
+    }
+
+    function clearReportView() {
+      const container = document.getElementById("reportContainer");
+      const footer = document.getElementById("reportFooter");
+      if (!container || !footer) return;
+      const lines = container.querySelectorAll(".report-line");
+      lines.forEach(line => line.remove());
+    }
+
+    /* ========= DEFAULT USERS ========= */
+    function seedDefaultUserIfNeeded() {
+      const raw = localStorage.getItem(USER_KEY);
+      if (!raw) {
+        const users = [{ username: "Thol2903", password: "12345" }];
+        localStorage.setItem(USER_KEY, JSON.stringify(users));
+      }
+    }
+    function getUsers() {
+      const raw = localStorage.getItem(USER_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }
+    function setUsers(users) {
+      localStorage.setItem(USER_KEY, JSON.stringify(users));
+    }
+
+    /* ========= PAGE SHOW/HIDE ========= */
+    function showPage(pageId) {
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("adminPage").style.display = "none";
+      document.getElementById("appPage").style.display = "none";
+      document.getElementById(pageId).style.display = "block";
+    }
+
+    /* ========= LOGIN & REGISTER TABS ========= */
+    function toggleRegister(showReg) {
+      clearLoginInputs();
+      document.getElementById('userLoginForm').style.display = showReg ? 'none' : 'block';
+      document.getElementById('userRegisterForm').style.display = showReg ? 'block' : 'none';
+    }
+
+    function switchLoginTab(tab) {
+      clearLoginInputs();
+      const tabUser = document.getElementById("tabUser");
+      const tabAdmin = document.getElementById("tabAdmin");
+      const userForm = document.getElementById("userLoginForm");
+      const adminForm = document.getElementById("adminLoginForm");
+      const regForm = document.getElementById("userRegisterForm");
+
+      if (tab === "user") {
+        tabUser.classList.add("active");
+        tabAdmin.classList.remove("active");
+        userForm.style.display = "block";
+        regForm.style.display = "none";
+        adminForm.style.display = "none";
+      } else {
+        tabAdmin.classList.add("active");
+        tabUser.classList.remove("active");
+        adminForm.style.display = "block";
+        userForm.style.display = "none";
+        regForm.style.display = "none";
+      }
+    }
+
+    /* ========= USER REGISTER ========= */
+    function doUserRegister() {
+      const u = document.getElementById("regUser").value.trim();
+      const p = document.getElementById("regPass").value;
+      const pConf = document.getElementById("regPassConfirm").value;
+
+      if (!u || !p || !pConf) { alert("សូមបំពេញព័ត៌មានអោយបានគ្រប់គ្រាន់!"); return; }
+      if (p !== pConf) { alert("❌ Password មិនផ្ទៀងផ្ទាត់គ្នាទេ!"); return; }
+
+      seedDefaultUserIfNeeded();
+      const users = getUsers();
+      const exists = users.some(x => x.username.toLowerCase() === u.toLowerCase());
+
+      if (exists) {
+        alert("❌ Username នេះមានគេប្រើរួចហើយ! សូមជ្រើសរើសឈ្មោះផ្សេង។");
+        return;
+      }
+
+      users.push({ username: u, password: p });
+      setUsers(users);
+
+      alert("✅ បង្កើតគណនីបានជោគជ័យ! សូម Login ចូលប្រើប្រាស់។");
+      toggleRegister(false);
+    }
+
+    /* ========= USER LOGIN ========= */
+    function doUserLogin() {
+      const u = document.getElementById("loginUser").value.trim();
+      const p = document.getElementById("loginPass").value;
+
+      if (!u || !p) { alert("សូមបញ្ចូល Username និង Password ជាមុនសិន!"); return; }
+
+      seedDefaultUserIfNeeded();
+      const ok = getUsers().some(x => x.username === u && x.password === p);
+
+      if (!ok) {
+        alert("❌ Username ឬ Password មិនត្រឹមត្រូវ!");
+        document.getElementById("loginPass").value = "";
+        return;
+      }
+
+      localStorage.setItem(AUTH_USER_KEY, "true");
+      localStorage.setItem(LOGGED_USER_KEY, u);
+      clearLoginInputs();
+
+      initAppAfterLogin();
+      showApp();
+    }
+
+    function showApp() {
+      showPage("appPage");
+      const u = localStorage.getItem(LOGGED_USER_KEY) || "";
+      document.getElementById("userBadge").innerText = u ? ("👤 " + u) : "";
+    }
+
+    function logoutUser() {
+      localStorage.removeItem(AUTH_USER_KEY);
+      localStorage.removeItem(LOGGED_USER_KEY);
+      clearLoginInputs();
+      clearReportView();
+      showPage("loginPage");
+      switchLoginTab("user");
+    }
+
+    /* ========= ADMIN LOGIN ========= */
+    function doAdminLogin() {
+      const adminPass = document.getElementById("adminPass").value;
+      if (!adminPass) { alert("សូមបញ្ចូល Admin Password!"); return; }
+
+      if (adminPass !== "123123") {
+        alert("❌ Admin Password មិនត្រឹមត្រូវ!");
+        document.getElementById("adminPass").value = "";
+        return;
+      }
+
+      localStorage.setItem(AUTH_ADMIN_KEY, "true");
+      clearLoginInputs();
+      showAdmin();
+    }
+
+    function showAdmin() {
+      showPage("adminPage");
+      refreshAdminUI();
+    }
+
+    function logoutAdmin() {
+      localStorage.removeItem(AUTH_ADMIN_KEY);
+      clearLoginInputs();
+      showPage("loginPage");
+      switchLoginTab("admin");
+    }
+
+    function goToUserLogin() {
+      showPage("loginPage");
+      switchLoginTab("user");
+    }
+
+    /* ========= ADMIN FUNCTIONS ========= */
+    function refreshAdminUI() {
+      seedDefaultUserIfNeeded();
+
+      const sel = document.getElementById("editUserSelect");
+      sel.innerHTML = "";
+      getUsers().forEach(u => {
+        const opt = document.createElement("option");
+        opt.value = u.username;
+        opt.textContent = u.username;
+        sel.appendChild(opt);
+      });
+
+      renderUserTable();
+    }
+
+    function addUser() {
+      const username = document.getElementById("newUser").value.trim();
+      const password = document.getElementById("newPass").value;
+
+      if (!username || !password) {
+        alert("សូមបញ្ចូល Username និង Password ថ្មី!");
+        return;
+      }
+
+      const users = getUsers();
+      const exists = users.some(u => u.username.toLowerCase() === username.toLowerCase());
+      if (exists) {
+        alert("❌ Username នេះមានរួចហើយ!");
+        return;
+      }
+
+      users.push({ username, password });
+      setUsers(users);
+
+      document.getElementById("newUser").value = "";
+      document.getElementById("newPass").value = "";
+
+      alert("✅ បានបន្ថែម User រួចរាល់!");
+      refreshAdminUI();
+    }
+
+    function updateUserPassword() {
+      const username = document.getElementById("editUserSelect").value;
+      const newPass = document.getElementById("editPass").value;
+
+      if (!username) { alert("សូមជ្រើសរើស Username!"); return; }
+      if (!newPass) { alert("សូមបញ្ចូល Password ថ្មី!"); return; }
+
+      const users = getUsers().map(u => {
+        if (u.username === username) return { ...u, password: newPass };
+        return u;
+      });
+      setUsers(users);
+
+      document.getElementById("editPass").value = "";
+      alert("✅ បានកែប្រែ Password រួចរាល់!");
+      refreshAdminUI();
+    }
+
+    function deleteUser(username) {
+      if (!confirm(`ចង់លុប User "${username}" មែនទេ?`)) return;
+
+      const users = getUsers().filter(u => u.username !== username);
+      if (users.length === 0) {
+        alert("មិនអាចលុបអស់ទាំងអស់បានទេ! (យ៉ាងតិចមាន 1 user)");
+        return;
+      }
+      setUsers(users);
+      alert("✅ បានលុប User រួចរាល់!");
+      refreshAdminUI();
+    }
+
+    function renderUserTable() {
+      const users = getUsers();
+      const wrap = document.getElementById("userTableWrap");
+
+      let html = `<table>
+        <thead><tr><th>Username</th><th>Password</th><th>Action</th></tr></thead><tbody>`;
+
+      users.forEach(u => {
+        html += `<tr>
+          <td>${escapeHtml(u.username)}</td>
+          <td>${escapeHtml(u.password)}</td>
+          <td>
+            <button class="smallbtn danger" onclick="deleteUser('${escapeAttr(u.username)}')">លុប</button>
+          </td>
+        </tr>`;
+      });
+
+      html += `</tbody></table>`;
+      wrap.innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+      return String(str).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+    }
+    function escapeAttr(str) {
+      return String(str).replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+    }
+
+    /* ========= GOOGLE SHEET INTEGRATION ========= */
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1okm-8WnOJ5I4AsBIRTp1stxAPTTBiMn1H6_Zhw0f9Lk/export?format=csv"; 
+    let allSheetData = [];
+
+    async function fetchSheetData() {
+      try {
+        const response = await fetch(SHEET_CSV_URL);
+        const csvText = await response.text();
+        parseCSV(csvText);
+      } catch (error) {
+        console.error("Error fetching sheet:", error);
+        document.getElementById('groupSelect').placeholder = "❌ បរាជ័យក្នុងការទាញទិន្នន័យ (សូមពិនិត្យ Link)";
+      }
+    }
+
+    function splitCSVRow(str) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < str.length; i++) {
+        if (str[i] === '"') inQuotes = !inQuotes;
+        else if (str[i] === ',' && !inQuotes) { result.push(current); current = ''; }
+        else current += str[i];
+      }
+      result.push(current);
+      return result.map(s => s.replace(/^"|"$/g, '').trim());
+    }
+
+    function parseCSV(csvText) {
+      const rows = csvText.split(/\r?\n/);
+      allSheetData = [];
+      let groups = new Set();
+
+      let groupIdx = 0, nameIdx = 1, userIdx = 2;
+      let headerFound = false;
+
+      for (let i = 0; i < rows.length; i++) {
+        if (!rows[i].trim()) continue;
+        
+        const cols = splitCSVRow(rows[i]);
+
+        if (!headerFound) {
+          const rowStr = rows[i].toLowerCase();
+          if (rowStr.includes('ក្រុម') || rowStr.includes('ឈ្មោះ') || rowStr.includes('user')) {
+            cols.forEach((col, idx) => {
+              const colStr = col.toLowerCase();
+              if (colStr.includes('ក្រុម') || colStr.includes('group')) groupIdx = idx;
+              else if (colStr.includes('user')) userIdx = idx;
+              else if (colStr.includes('ឈ្មោះ') || colStr.includes('name')) nameIdx = idx;
+            });
+            headerFound = true;
+            continue;
+          }
+        }
+
+        if (headerFound || i > 0) {
+          let group = cols[groupIdx] ? cols[groupIdx] : "";
+          let name = cols[nameIdx] ? cols[nameIdx] : "";
+          let username = cols[userIdx] ? cols[userIdx] : "";
+
+          if (group && !group.includes("ក្រុម") && !group.toLowerCase().includes("group")) {
+            group = "ក្រុម " + group; 
+          }
+
+          if (group && name && !name.includes("ឈ្មោះ")) {
+            allSheetData.push({ group, name, username });
+            groups.add(group);
+          }
+        }
+      }
+
+      // បញ្ចូលទិន្នន័យក្រុមទៅក្នុង Datalist
+      const groupInput = document.getElementById('groupSelect');
+      const groupList = document.getElementById('groupList');
+      groupList.innerHTML = ``;
+      groupInput.placeholder = "-- វាយឈ្មោះ ឬជ្រើសរើសក្រុមទីនេះ --";
+      
+      Array.from(groups).sort(new Intl.Collator('km', {numeric: true}).compare).forEach(g => {
+        groupList.innerHTML += `<option value="${g}">`;
+      });
+    }
+
+    function loadMembers() {
+      const groupInput = document.getElementById('groupSelect');
+      let selectedGroup = groupInput.value.trim();
+      const memberBox = document.getElementById('memberListBox');
+      const actionBtn = document.getElementById('actionBtn');
+
+      if (!selectedGroup) {
+        memberBox.style.display = 'none';
+        actionBtn.innerText = "សូមវាយបញ្ចូលឈ្មោះក្រុមជាមុនសិន";
+        actionBtn.style.backgroundImage = "linear-gradient(135deg, #667eea 0%, #764ba2 100%), linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000)";
+        return;
+      }
+
+      // ឆែកមើលក្រែងលោអ្នកប្រើប្រាស់វាយតែ "A1" (មិនមានពាក្យ "ក្រុម ")
+      let members = allSheetData.filter(m => m.group.toLowerCase() === selectedGroup.toLowerCase());
+      
+      if (members.length === 0) {
+        let prefixed = "ក្រុម " + selectedGroup;
+        members = allSheetData.filter(m => m.group.toLowerCase() === prefixed.toLowerCase());
+        if(members.length > 0) {
+          selectedGroup = members[0].group; // តម្រឹមឈ្មោះឲ្យត្រូវពេញលេញវិញ
+        }
+      }
+
+      // បើនៅតែរកមិនឃើញក្រុមដែលវាយបញ្ចូល
+      if (members.length === 0) {
+        memberBox.style.display = 'none';
+        actionBtn.innerText = "មិនមានក្រុមនេះទេ (កំពុងស្វែងរក...)";
+        actionBtn.style.backgroundImage = "linear-gradient(135deg, #667eea 0%, #764ba2 100%), linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000)";
+        return;
+      }
+      
+      let html = `<b style="color:#764ba2; font-size: 16px;">បញ្ជីសមាជិក៖ ${selectedGroup} (សរុប ${members.length} នាក់)</b><div style="margin-top:15px;">`;
+      
+      members.forEach((m) => {
+        let displayUser = m.username ? (m.username.startsWith('@') ? m.username : '@' + m.username) : '';
+        let combinedName = `${m.name} ${displayUser}`.trim(); 
+        
+        html += `
+          <div class="member-row" data-name="${combinedName}">
+            <div class="member-info">
+              <b>${m.name}</b> <span style="color:#23a6d5; font-size:14px; margin-left:5px;">${displayUser}</span>
+            </div>
+            <div class="member-actions">
+              <button class="btn-att present active" onclick="setAttendance(this, 'present')">វត្តមាន</button>
+              <button class="btn-att absent" onclick="setAttendance(this, 'absent')">អវត្តមាន</button>
+            </div>
+            <input type="text" class="absent-reason-input" placeholder="មូលហេតុអវត្តមាន..." list="reasonOptions">
+          </div>
+        `;
+      });
+      html += `</div>`;
+      
+      memberBox.innerHTML = html;
+      memberBox.style.display = 'block';
+
+      actionBtn.innerText = "ដាក់បញ្ចូលរបាយការណ៍ (Submit)";
+      actionBtn.style.backgroundImage = "linear-gradient(135deg, #23d5ab 0%, #23a6d5 100%), linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000)";
+    }
+
+    function setAttendance(btn, status) {
+      const row = btn.closest('.member-row');
+      const btnPresent = row.querySelector('.btn-att.present');
+      const btnAbsent = row.querySelector('.btn-att.absent');
+      const reasonInput = row.querySelector('.absent-reason-input');
+
+      if (status === 'present') {
+        btnPresent.classList.add('active');
+        btnAbsent.classList.remove('active');
+        reasonInput.style.display = 'none';
+        reasonInput.value = ''; 
+      } else {
+        btnPresent.classList.remove('active');
+        btnAbsent.classList.add('active');
+        reasonInput.style.display = 'block';
+        reasonInput.focus();
+      }
+    }
+
+    /* ========= APP INIT ========= */
+    window.onload = function() {
+      seedDefaultUserIfNeeded();
+      localStorage.removeItem(AUTH_ADMIN_KEY);
+
+      const isUser = localStorage.getItem(AUTH_USER_KEY) === "true";
+
+      if (isUser) {
+        showApp();
+        initAppAfterLogin();
+        return;
+      }
+      showPage("loginPage");
+      switchLoginTab("user");
+    };
+
+    function initAppAfterLogin() {
+      updateHeader();
+      clearReportView();
+      loadFromLocalStorage();
+      fetchSheetData(); 
+    }
+
+    document.addEventListener("keydown", (e) => {
+      const loginVisible = document.getElementById("loginPage").style.display !== "none";
+      if (!loginVisible) return;
+
+      if (e.key === "Enter") {
+        const adminFormVisible = document.getElementById("adminLoginForm").style.display !== "none";
+        const regFormVisible = document.getElementById("userRegisterForm").style.display !== "none";
+        
+        if (adminFormVisible) doAdminLogin();
+        else if (regFormVisible) doUserRegister();
+        else doUserLogin();
+      }
+    });
+
+    /* ========= REPORT FUNCTIONS ========= */
+    function updateHeader() {
+      const today = new Date();
+      const timeVal = document.getElementById('timeSelect').value;
+      const headerText = `ជម្រាបបងនេះរាយការណ៍នៅថ្ងៃទី ${today.getDate()} ខែ ${today.getMonth() + 1} ឆ្នាំ ${today.getFullYear()}\n${timeVal}`;
+      document.getElementById('dateHeader').innerText = headerText;
+    }
+
+    function submitReport() {
+      let groupValue = document.getElementById('groupSelect').value.trim();
+      
+      // ការពារករណីវាយតែ A1 អោយលោតយក "ក្រុម A1" ដោយស្វ័យប្រវត្តិពេល Submit
+      let exactGroup = allSheetData.find(m => m.group.toLowerCase() === groupValue.toLowerCase() || m.group.toLowerCase() === ("ក្រុម " + groupValue).toLowerCase());
+      
+      if (!exactGroup) {
+        alert("សូមជ្រើសរើស ឬវាយឈ្មោះក្រុមឲ្យបានត្រឹមត្រូវជាមុនសិន!");
+        return;
+      }
+      const selectedGroup = exactGroup.group;
+
+      const rows = document.querySelectorAll('#memberListBox .member-row');
+      const totalMembers = rows.length;
+      let absentees = [];
+      let presents = [];
+
+      rows.forEach(row => {
+        const isAbsent = row.querySelector('.btn-att.absent').classList.contains('active');
+        const fullName = row.getAttribute('data-name'); 
+        
+        if (isAbsent) {
+          let reason = row.querySelector('.absent-reason-input').value.trim();
+          if(!reason) reason = "គ្មានមូលហេតុ";
+          absentees.push(`- ${fullName} ( ${reason} )`);
+        } else {
+          presents.push(`- ${fullName}`);
+        }
+      });
+
+      let shortGroupName = selectedGroup;
+      if (!shortGroupName.startsWith("ក្រុម")) { shortGroupName = "ក្រុម " + shortGroupName; }
+
+      let line1 = `${shortGroupName} សមាជិក ${totalMembers}នាក់`;
+      let finalHTML = "";
+
+      let presentHTML = "";
+      if (presents.length > 0) {
+        presentHTML = `<br>👉 <b>វត្តមាន (${presents.length}នាក់)៖</b><br>` + presents.join('<br>');
+      }
+
+      let absenteeHTML = "";
+      if (absentees.length > 0) {
+        absenteeHTML = `<br>👉 <b>អវត្តមាន (${absentees.length}នាក់)៖</b><br>` + absentees.join('<br>');
+      }
+
+      if (absentees.length === 0) {
+        finalHTML = `${line1} (សមាជិកនៅកន្លែងគ្រប់)${presentHTML}`;
+      } else {
+        finalHTML = `${line1}${presentHTML}${absenteeHTML}`;
+      }
+
+      const container = document.getElementById('reportContainer');
+      const footer = document.getElementById('reportFooter');
+      
+      const newLine = document.createElement('div');
+      newLine.className = 'report-line';
+      newLine.innerHTML = `
+        <div class="text-content" contenteditable="true" oninput="saveToLocalStorage()">${finalHTML}</div>
+        <button class="delete-btn" onclick="removeLine(this)">❌</button>
+      `;
+
+      container.insertBefore(newLine, footer);
+      saveToLocalStorage();
+
+      document.getElementById('groupSelect').value = "";
+      loadMembers(); 
+    }
+
+    function saveToLocalStorage() {
+      const lines = document.querySelectorAll('.report-line .text-content');
+      let dataToSave = [];
+      lines.forEach(line => dataToSave.push(line.innerHTML));
+      
+      const currentUser = localStorage.getItem(LOGGED_USER_KEY) || "unknown";
+      localStorage.setItem('myReportData_' + currentUser, JSON.stringify(dataToSave));
+    }
+
+    function loadFromLocalStorage() {
+      clearReportView();
+
+      const currentUser = localStorage.getItem(LOGGED_USER_KEY) || "unknown";
+      const savedData = localStorage.getItem('myReportData_' + currentUser);
+      
+      if (savedData) {
+        const reports = JSON.parse(savedData);
+        const container = document.getElementById('reportContainer');
+        const footer = document.getElementById('reportFooter');
+
+        reports.forEach(htmlContent => {
+          const newLine = document.createElement('div');
+          newLine.className = 'report-line';
+          newLine.innerHTML = `
+            <div class="text-content" contenteditable="true" oninput="saveToLocalStorage()">${htmlContent}</div>
+            <button class="delete-btn" onclick="removeLine(this)">❌</button>
+          `;
+          container.insertBefore(newLine, footer);
+        });
+      }
+    }
+
+    function removeLine(btn) {
+      btn.parentElement.remove();
+      saveToLocalStorage();
+    }
+
+    function copyReport() {
+      const dateHeader = document.getElementById('dateHeader').innerText;
+      const reportFooter = document.getElementById('reportFooter').innerText;
+      const lines = document.querySelectorAll('.text-content');
+
+      let fullText = dateHeader + "\n\n";
+      lines.forEach(line => { fullText += line.innerText + "\n\n"; });
+      fullText += reportFooter;
+
+      if (lines.length === 0) { alert("មិនមានទិន្នន័យសម្រាប់ចម្លងទេ!"); return; }
+
+      navigator.clipboard.writeText(fullText)
+        .then(() => { alert("✅ បានចម្លងរបាយការណ៍រួចរាល់!"); })
+        .catch(err => { console.error('Failed to copy: ', err); });
+    }
+  </script>
+</body>
+</html>
+
+```
