@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="km">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ប្រព័ន្ធរបាយការណ៍ - Clean Box Edition</title>
+  <title>ប្រព័ន្ធរបាយការណ៍ - Add & Edit Members</title>
   <style>
     /* =========================================
        រក្សាទុកពណ៌ Background លោតចម្រុះ
@@ -32,7 +31,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* ដកពណ៌ស៊ុមជុំវិញប្រអប់ធំ ចេញ */
     .container {
       background: rgba(255, 255, 255, 0.95);
       padding: 40px;
@@ -59,7 +57,6 @@
     .form-group { margin-bottom: 15px; text-align: left; }
     label { display: block; margin-bottom: 8px; color: #666; font-weight: bold; }
     
-    /* ដកពណ៌ស៊ុមជុំវិញប្រអប់វាយអក្សរ (Input & Select) ចេញ */
     input, select {
       width: 100%;
       padding: 12px 15px;
@@ -78,7 +75,6 @@
       box-shadow: 0 0 8px rgba(118, 75, 162, 0.2); 
     }
 
-    /* ដកពណ៌ស៊ុមជុំវិញប៊ូតុង ចេញ */
     .btn-action, .btn-copy {
       color: white;
       border: none;
@@ -103,7 +99,6 @@
     }
     .btn-action:hover, .btn-copy:hover { transform: translateY(-3px); }
 
-    /* ដកពណ៌ស៊ុមជុំវិញប្រអប់របាយការណ៍ ចេញ */
     .simple-report-box {
       margin-top: 30px;
       text-align: left;
@@ -153,11 +148,12 @@
     th, td{ border-bottom:1px dashed #ddd; padding:8px; text-align:left; }
     th{ color:#764ba2; }
     .smallbtn{
-      padding:6px 10px; border-radius:8px; border:none; cursor:pointer;
+      padding:8px 12px; border-radius:8px; border:none; cursor:pointer;
       font-family:inherit; font-weight:bold; color:#fff;
       background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-      margin-right:6px;
+      margin-right:6px; transition: 0.2s;
     }
+    .smallbtn:hover { opacity: 0.9; }
     .smallbtn.danger{ background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); }
     .link-btn { color:#764ba2; font-weight:bold; text-decoration:none; cursor:pointer; }
     .link-btn:hover { text-decoration:underline; }
@@ -219,41 +215,34 @@
       border-radius: 5px;
     }
 
-    /* =========================================
-       តម្រូវសម្រាប់ទូរស័ព្ទដៃ (Responsive CSS) 
-       ========================================= */
+    /* ====== ប៊ូតុង និងប្រអប់បន្ថែម/កែប្រែ ====== */
+    .edit-del-btn {
+      background: none; border: none; font-size: 13px; cursor: pointer; 
+      padding: 3px 6px; margin-right: 5px; border-radius: 4px; font-family: inherit; font-weight: bold;
+    }
+    .edit-btn { color: #11998e; background: #e0f8f5; }
+    .del-btn { color: #ff4757; background: #fff0f0; }
+
+    .add-member-box {
+      background: #fbfbff;
+      border: 2px dashed #23a6d5;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: left;
+      display: none; 
+    }
+
     @media (max-width: 600px) {
-      body {
-        padding: 15px 10px; 
-      }
-      .container {
-        padding: 25px 20px; 
-        border-radius: 15px;
-      }
-      .rainbow-text {
-        font-size: 24px; 
-      }
-      input, select {
-        padding: 12px;
-        font-size: 15px;
-      }
-      .btn-action, .btn-copy {
-        padding: 12px 20px;
-        font-size: 16px;
-      }
-      .member-list-box {
-        padding: 10px;
-      }
-      .member-info {
-        font-size: 14px;
-      }
-      .btn-att {
-        padding: 6px 10px;
-        font-size: 13px;
-      }
-      .simple-report-box {
-        padding: 15px;
-      }
+      body { padding: 15px 10px; }
+      .container { padding: 25px 20px; border-radius: 15px; }
+      .rainbow-text { font-size: 24px; }
+      input, select { padding: 12px; font-size: 15px; }
+      .btn-action, .btn-copy { padding: 12px 20px; font-size: 16px; }
+      .member-list-box { padding: 10px; }
+      .member-info { font-size: 14px; }
+      .btn-att { padding: 6px 10px; font-size: 13px; }
+      .simple-report-box { padding: 15px; }
     }
   </style>
 </head>
@@ -350,6 +339,15 @@
       <div id="userTableWrap"></div>
     </div>
 
+    <div class="admin-box">
+      <b style="color: #764ba2;">4) ប្រវត្តិអ្នកចូលប្រើ (Login Logs)</b>
+      <div class="muted" style="margin-top: 5px; text-align: left;">ទិន្នន័យទាញយកពី Google Sheet ផ្ទាល់។</div>
+      <button class="smallbtn" onclick="fetchLoginLogs()" style="margin-top: 10px; width: 100%;">🔄 ចុចទីនេះដើម្បីទាញយកប្រវត្តិ</button>
+      <div id="logTableWrap" style="margin-top: 10px; max-height: 250px; overflow-y: auto;">
+         <div style="text-align:center; padding: 10px; color: #888;">មិនទាន់បានទាញយកទិន្នន័យទេ</div>
+      </div>
+    </div>
+
     <button class="btn-action" onclick="goToUserLogin()" style="background: #888;">ត្រឡប់ទៅ User Login</button>
   </div>
 
@@ -379,6 +377,14 @@
     <div id="memberListBox" class="member-list-box">
     </div>
 
+    <div id="addMemberSection" class="add-member-box">
+      <b style="color:#23a6d5; font-size: 15px;">➕ បន្ថែមសមាជិកថ្មីចូលក្រុមនេះ</b>
+      <div style="font-size: 13px; color: #888; margin-bottom: 10px;">(បន្ថែមបណ្តោះអាសន្នសម្រាប់ស្រង់របាយការណ៍នេះប៉ុណ្ណោះ)</div>
+      <input type="text" id="newMemName" placeholder="ឈ្មោះសមាជិកថ្មី..." autocomplete="off">
+      <input type="text" id="newMemUser" placeholder="Username (ឧ: @panha)" autocomplete="off">
+      <button class="smallbtn" onclick="addLocalMember()" style="width: 100%; margin-top: 5px; padding: 12px; background: linear-gradient(135deg, #23a6d5 0%, #23d5ab 100%); font-size: 15px;">➕ បន្ថែមចូលបញ្ជីខាងលើ</button>
+    </div>
+
     <datalist id="reasonOptions">
       <option value="ច្បាប់ឈឺ">
       <option value="ច្បាប់ទៅផ្ទះ">
@@ -403,6 +409,9 @@
     const LOGGED_USER_KEY = "loggedUser";     
     const AUTH_ADMIN_KEY = "isAdminLoggedIn"; 
 
+    // ✅ កន្លែងដាក់ Link ពី Google Apps Script ដើម្បីចាប់ប្រវត្តិអ្នក Login
+    const GAS_WEB_APP_URL = "YOUR_WEB_APP_LINK_HERE"; 
+
     function clearLoginInputs() {
       const ids = ["loginUser", "loginPass", "adminPass", "newPass", "editPass", "regUser", "regPass", "regPassConfirm"];
       ids.forEach(id => {
@@ -419,7 +428,6 @@
       lines.forEach(line => line.remove());
     }
 
-    /* ========= DEFAULT USERS ========= */
     function seedDefaultUserIfNeeded() {
       const raw = localStorage.getItem(USER_KEY);
       if (!raw) {
@@ -435,7 +443,6 @@
       localStorage.setItem(USER_KEY, JSON.stringify(users));
     }
 
-    /* ========= PAGE SHOW/HIDE ========= */
     function showPage(pageId) {
       document.getElementById("loginPage").style.display = "none";
       document.getElementById("adminPage").style.display = "none";
@@ -443,7 +450,6 @@
       document.getElementById(pageId).style.display = "block";
     }
 
-    /* ========= LOGIN & REGISTER TABS ========= */
     function toggleRegister(showReg) {
       clearLoginInputs();
       document.getElementById('userLoginForm').style.display = showReg ? 'none' : 'block';
@@ -473,7 +479,6 @@
       }
     }
 
-    /* ========= USER REGISTER ========= */
     function doUserRegister() {
       const u = document.getElementById("regUser").value.trim();
       const p = document.getElementById("regPass").value;
@@ -498,12 +503,12 @@
       toggleRegister(false);
     }
 
-    /* ========= USER LOGIN ========= */
     function doUserLogin() {
       const u = document.getElementById("loginUser").value.trim();
       const p = document.getElementById("loginPass").value;
 
-      if (!u || !p) { alert("សូមបញ្ចូល Username និង Password ជាមុនសិន!"); return; }
+      if (!u) { alert("សូមបញ្ចូល Username ជាមុនសិន!"); return; }
+      if (!p) { alert("សូមបញ្ចូល Password ជាមុនសិន!"); return; }
 
       seedDefaultUserIfNeeded();
       const ok = getUsers().some(x => x.username === u && x.password === p);
@@ -516,8 +521,14 @@
 
       localStorage.setItem(AUTH_USER_KEY, "true");
       localStorage.setItem(LOGGED_USER_KEY, u);
-      clearLoginInputs();
+      
+      // ✅ ផ្ញើឈ្មោះអ្នកដែលទើបតែ Login ទៅ Google Sheet តាមរយៈ Web App URL
+      if(!GAS_WEB_APP_URL.includes("YOUR_WEB_APP_LINK_HERE")) {
+        fetch(GAS_WEB_APP_URL + "?action=login&username=" + encodeURIComponent(u), { mode: 'no-cors' })
+          .catch(err => console.log("Login tracking failed: ", err));
+      }
 
+      clearLoginInputs();
       initAppAfterLogin();
       showApp();
     }
@@ -584,30 +595,26 @@
       });
 
       renderUserTable();
+      
+      const logWrap = document.getElementById("logTableWrap");
+      if(logWrap) logWrap.innerHTML = "<div style='text-align:center; padding: 10px; color: #888;'>មិនទាន់បានទាញយកទិន្នន័យទេ</div>";
     }
 
     function addUser() {
       const username = document.getElementById("newUser").value.trim();
       const password = document.getElementById("newPass").value;
 
-      if (!username || !password) {
-        alert("សូមបញ្ចូល Username និង Password ថ្មី!");
-        return;
-      }
+      if (!username || !password) { alert("សូមបញ្ចូល Username និង Password ថ្មី!"); return; }
 
       const users = getUsers();
-      const exists = users.some(u => u.username.toLowerCase() === username.toLowerCase());
-      if (exists) {
-        alert("❌ Username នេះមានរួចហើយ!");
-        return;
+      if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        alert("❌ Username នេះមានរួចហើយ!"); return;
       }
 
       users.push({ username, password });
       setUsers(users);
-
       document.getElementById("newUser").value = "";
       document.getElementById("newPass").value = "";
-
       alert("✅ បានបន្ថែម User រួចរាល់!");
       refreshAdminUI();
     }
@@ -624,7 +631,6 @@
         return u;
       });
       setUsers(users);
-
       document.getElementById("editPass").value = "";
       alert("✅ បានកែប្រែ Password រួចរាល់!");
       refreshAdminUI();
@@ -632,12 +638,8 @@
 
     function deleteUser(username) {
       if (!confirm(`ចង់លុប User "${username}" មែនទេ?`)) return;
-
       const users = getUsers().filter(u => u.username !== username);
-      if (users.length === 0) {
-        alert("មិនអាចលុបអស់ទាំងអស់បានទេ! (យ៉ាងតិចមាន 1 user)");
-        return;
-      }
+      if (users.length === 0) { alert("មិនអាចលុបអស់ទាំងអស់បានទេ! (យ៉ាងតិចមាន 1 user)"); return; }
       setUsers(users);
       alert("✅ បានលុប User រួចរាល់!");
       refreshAdminUI();
@@ -649,26 +651,47 @@
 
       let html = `<table>
         <thead><tr><th>Username</th><th>Password</th><th>Action</th></tr></thead><tbody>`;
-
       users.forEach(u => {
         html += `<tr>
           <td>${escapeHtml(u.username)}</td>
           <td>${escapeHtml(u.password)}</td>
-          <td>
-            <button class="smallbtn danger" onclick="deleteUser('${escapeAttr(u.username)}')">លុប</button>
-          </td>
+          <td><button class="smallbtn danger" onclick="deleteUser('${escapeAttr(u.username)}')">លុប</button></td>
         </tr>`;
       });
-
       html += `</tbody></table>`;
       wrap.innerHTML = html;
     }
 
-    function escapeHtml(str) {
-      return String(str).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
-    }
+    function escapeHtml(str) { return String(str).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;"); }
     function escapeAttr(str) {
-      return String(str).replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+      if(!str) return "";
+      return String(str).replaceAll("\\", "\\\\").replaceAll("'", "\\'").replaceAll('"', "&quot;");
+    }
+
+    function fetchLoginLogs() {
+      const wrap = document.getElementById("logTableWrap");
+      if(GAS_WEB_APP_URL.includes("YOUR_WEB_APP_LINK_HERE")) {
+        wrap.innerHTML = "<div style='color:#ff4757; text-align:center;'>❌ សូមដាក់ Link Web App ក្នុងកូដជាមុនសិន!</div>";
+        return;
+      }
+      wrap.innerHTML = "<div style='text-align:center; color:#764ba2;'>កំពុងទាញយកទិន្នន័យ... ⏳</div>";
+      
+      fetch(GAS_WEB_APP_URL + "?action=getLogs")
+        .then(res => res.json())
+        .then(data => {
+          if(!data || data.length === 0) {
+            wrap.innerHTML = "<div style='text-align:center;'>មិនទាន់មាននរណាម្នាក់ Login ទេ។</div>"; return;
+          }
+          let html = `<table><thead><tr><th>ម៉ោង & កាលបរិច្ឆេទ</th><th>Username</th></tr></thead><tbody>`;
+          data.forEach(row => {
+            html += `<tr><td style="font-size: 13px; color: #555;">${row.time}</td><td><b>${row.user}</b></td></tr>`;
+          });
+          html += `</tbody></table>`;
+          wrap.innerHTML = html;
+        })
+        .catch(err => {
+           wrap.innerHTML = "<div style='color:#ff4757; text-align:center;'>❌ បរាជ័យក្នុងការទាញយក! សូមពិនិត្យមើលសិទ្ធិ (Anyone)។</div>";
+        });
     }
 
     /* ========= GOOGLE SHEET INTEGRATION ========= */
@@ -688,8 +711,7 @@
 
     function splitCSVRow(str) {
       const result = [];
-      let current = '';
-      let inQuotes = false;
+      let current = ''; let inQuotes = false;
       for (let i = 0; i < str.length; i++) {
         if (str[i] === '"') inQuotes = !inQuotes;
         else if (str[i] === ',' && !inQuotes) { result.push(current); current = ''; }
@@ -710,7 +732,6 @@
 
       for (let i = 0; i < rows.length; i++) {
         if (!rows[i].trim()) continue;
-        
         const cols = splitCSVRow(rows[i]);
 
         if (!headerFound) {
@@ -722,8 +743,7 @@
               else if (colStr.includes('user')) userIdx = idx;
               else if (colStr.includes('ឈ្មោះ') || colStr.includes('name')) nameIdx = idx;
             });
-            headerFound = true;
-            continue;
+            headerFound = true; continue;
           }
         }
 
@@ -731,15 +751,13 @@
         let hasAtSymbol = rows[i].includes("@"); 
         
         if (possibleHeader && !hasAtSymbol) {
-          currentSectionGroup = possibleHeader.trim();
-          continue; 
+          currentSectionGroup = possibleHeader.trim(); continue; 
         }
 
         if (headerFound || i > 0) {
           let rowGroup = cols[groupIdx] ? cols[groupIdx].trim() : "";
           let name = cols[nameIdx] ? cols[nameIdx].trim() : "";
           let username = cols[userIdx] ? cols[userIdx].trim() : "";
-
           let finalGroup = currentSectionGroup || rowGroup;
 
           if (finalGroup && !finalGroup.includes("ក្រុម") && !finalGroup.toLowerCase().includes("group")) {
@@ -768,9 +786,11 @@
       let selectedGroup = groupInput.value.trim();
       const memberBox = document.getElementById('memberListBox');
       const actionBtn = document.getElementById('actionBtn');
+      const addMemberSec = document.getElementById('addMemberSection');
 
       if (!selectedGroup) {
         memberBox.style.display = 'none';
+        addMemberSec.style.display = 'none';
         actionBtn.innerText = "សូមវាយបញ្ចូលឈ្មោះក្រុមជាមុនសិន";
         actionBtn.style.background = "#999";
         actionBtn.style.boxShadow = "none";
@@ -787,11 +807,15 @@
         }
       }
 
+      // អនុញ្ញាតឲ្យបង្ហាញប្រអប់បន្ថែមទោះបីជាវាយក្រុមថ្មី ដែលមិនទាន់មានសមាជិកក៏ដោយ
       if (members.length === 0) {
-        memberBox.style.display = 'none';
-        actionBtn.innerText = "មិនមានក្រុមនេះទេ (កំពុងស្វែងរក...)";
-        actionBtn.style.background = "#999";
-        actionBtn.style.boxShadow = "none";
+        memberBox.innerHTML = `<div style="text-align:center; padding:10px; color:#888;">មិនទាន់មានសមាជិកក្នុង <b>${selectedGroup}</b> ទេ! សូមបន្ថែមនៅខាងក្រោម។</div>`;
+        memberBox.style.display = 'block';
+        addMemberSec.style.display = 'block';
+        
+        actionBtn.innerText = "ដាក់បញ្ចូលរបាយការណ៍ (Submit)";
+        actionBtn.style.background = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+        actionBtn.style.boxShadow = "0 4px 15px rgba(118, 75, 162, 0.2)";
         return;
       }
       
@@ -805,6 +829,10 @@
           <div class="member-row" data-name="${combinedName}">
             <div class="member-info">
               <b>${m.name}</b> <span style="color:#23a6d5; font-size:14px; margin-left:5px;">${displayUser}</span>
+              <div style="margin-top: 5px;">
+                <button class="edit-del-btn edit-btn" onclick="editLocalMember('${escapeAttr(m.name)}', '${escapeAttr(m.username)}', '${escapeAttr(selectedGroup)}')">✏️ កែប្រែ</button>
+                <button class="edit-del-btn del-btn" onclick="deleteLocalMember('${escapeAttr(m.name)}', '${escapeAttr(m.username)}', '${escapeAttr(selectedGroup)}')">🗑️ លុប</button>
+              </div>
             </div>
             <div class="member-actions">
               <button class="btn-att present active" onclick="setAttendance(this, 'present')">វត្តមាន</button>
@@ -818,6 +846,7 @@
       
       memberBox.innerHTML = html;
       memberBox.style.display = 'block';
+      addMemberSec.style.display = 'block';
 
       actionBtn.innerText = "ដាក់បញ្ចូលរបាយការណ៍ (Submit)";
       actionBtn.style.background = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
@@ -840,6 +869,54 @@
         btnAbsent.classList.add('active');
         reasonInput.style.display = 'block';
         reasonInput.focus();
+      }
+    }
+
+    // =====================================
+    // មុខងារ បន្ថែម កែប្រែ លុប សមាជិក (Local)
+    // =====================================
+    function addLocalMember() {
+      const groupInput = document.getElementById('groupSelect').value.trim();
+      if (!groupInput) { alert("សូមជ្រើសរើសក្រុមជាមុនសិន!"); return; }
+
+      let selectedGroup = groupInput;
+      let exactGroup = allSheetData.find(m => m.group.toLowerCase() === groupInput.toLowerCase() || m.group.toLowerCase() === ("ក្រុម " + groupInput).toLowerCase());
+      if(exactGroup) selectedGroup = exactGroup.group;
+
+      const name = document.getElementById('newMemName').value.trim();
+      const user = document.getElementById('newMemUser').value.trim();
+
+      if (!name) { alert("សូមបញ្ចូលឈ្មោះសមាជិក!"); return; }
+
+      allSheetData.push({ group: selectedGroup, name: name, username: user });
+      document.getElementById('newMemName').value = "";
+      document.getElementById('newMemUser').value = "";
+      loadMembers(); 
+    }
+
+    function editLocalMember(name, user, group) {
+      const newName = prompt("កែប្រែឈ្មោះ:", name);
+      if (newName === null) return; 
+      
+      const newUser = prompt("កែប្រែ Username:", user);
+      if (newUser === null) return; 
+
+      if (newName.trim() === "") { alert("ឈ្មោះមិនអាចទទេបានទេ!"); return; }
+
+      const index = allSheetData.findIndex(m => m.group === group && m.name === name && (m.username === user || (!m.username && !user)));
+      if (index > -1) {
+        allSheetData[index].name = newName.trim();
+        allSheetData[index].username = newUser.trim();
+        loadMembers();
+      }
+    }
+
+    function deleteLocalMember(name, user, group) {
+      if (!confirm(`តើអ្នកពិតជាចង់លុប "${name}" ចេញពីបញ្ជីនេះមែនទេ?`)) return;
+      const index = allSheetData.findIndex(m => m.group === group && m.name === name && (m.username === user || (!m.username && !user)));
+      if (index > -1) {
+        allSheetData.splice(index, 1);
+        loadMembers();
       }
     }
 
@@ -894,13 +971,19 @@
       let exactGroup = allSheetData.find(m => m.group.toLowerCase() === groupValue.toLowerCase() || m.group.toLowerCase() === ("ក្រុម " + groupValue).toLowerCase());
       
       if (!exactGroup) {
-        alert("សូមជ្រើសរើស ឬវាយឈ្មោះក្រុមឲ្យបានត្រឹមត្រូវជាមុនសិន!");
-        return;
+        // អនុញ្ញាតឲ្យ Submit បើគាត់បង្កើតក្រុមថ្មីសុទ្ធ
+        exactGroup = { group: groupValue.startsWith("ក្រុម") ? groupValue : "ក្រុម " + groupValue };
       }
       const selectedGroup = exactGroup.group;
 
       const rows = document.querySelectorAll('#memberListBox .member-row');
       const totalMembers = rows.length;
+      
+      if(totalMembers === 0) {
+        alert("មិនមានសមាជិកក្នុងក្រុមនេះទេ សូមបន្ថែមសមាជិកជាមុនសិន!");
+        return;
+      }
+
       let absentees = [];
       let presents = [];
 
