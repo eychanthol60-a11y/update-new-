@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ប្រព័ន្ធរបាយការណ៍ - Add & Edit Members</title>
+  <title>ប្រព័ន្ធរបាយការណ៍ - Direct Access Edition</title>
   <style>
     /* =========================================
-       រក្សាទុកពណ៌ Background លោតចម្រុះ
+       ពណ៌ Background លោតចម្រុះ
        ========================================= */
     body {
       font-family: 'Khmer OS Battambang', 'Segoe UI', sans-serif;
@@ -120,44 +120,6 @@
     .text-content:focus { background-color: #fffde7; border: 1px dashed #f1c40f; border-radius: 5px;}
     .delete-btn { background: none; border: none; color: #ff4757; cursor: pointer; font-size: 14px; margin-top: 5px;}
 
-    /* ====== LOGIN / ADMIN UI ====== */
-    #loginPage, #adminPage, #appPage { display: none; }
-    .topbar { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-    .user-badge { font-weight:bold; color:#764ba2; text-align:left; word-break: break-all;}
-    .btn-logout {
-      width:auto; padding:8px 14px; font-size:14px; font-weight:bold;
-      border-radius:8px; border:none; cursor:pointer;
-      color:white; background: #ff4757;
-      white-space: nowrap;
-    }
-    .muted { color:#666; font-size:14px; line-height:1.7; text-align:left; }
-    .tabs { display:flex; gap:10px; margin-top:10px; }
-    .tabbtn{
-      flex:1; padding:10px; border-radius:10px; cursor:pointer; border: 1px solid #ddd;
-      background:#f0f0f0; font-family:inherit; font-weight:bold; color:#555;
-    }
-    .tabbtn.active{
-      color:#fff; border:none;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    .admin-box{
-      margin-top:15px; padding:15px; border-radius:12px; text-align:left;
-      border:1px solid #ddd; background:#fbfbff;
-    }
-    table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
-    th, td{ border-bottom:1px dashed #ddd; padding:8px; text-align:left; }
-    th{ color:#764ba2; }
-    .smallbtn{
-      padding:8px 12px; border-radius:8px; border:none; cursor:pointer;
-      font-family:inherit; font-weight:bold; color:#fff;
-      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-      margin-right:6px; transition: 0.2s;
-    }
-    .smallbtn:hover { opacity: 0.9; }
-    .smallbtn.danger{ background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); }
-    .link-btn { color:#764ba2; font-weight:bold; text-decoration:none; cursor:pointer; }
-    .link-btn:hover { text-decoration:underline; }
-
     /* ====== ផ្នែកបញ្ជីសមាជិក ====== */
     .member-list-box {
       background: #fbfbff;
@@ -232,6 +194,12 @@
       text-align: left;
       display: none; 
     }
+    .smallbtn{
+      padding:8px 12px; border-radius:8px; border:none; cursor:pointer;
+      font-family:inherit; font-weight:bold; color:#fff;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      transition: 0.2s;
+    }
 
     @media (max-width: 600px) {
       body { padding: 15px 10px; }
@@ -248,115 +216,7 @@
 </head>
 
 <body>
-  <div class="container" id="loginPage">
-    <h1 class="rainbow-text">🔐 Login ចូលប្រើប្រាស់</h1>
-
-    <div class="tabs">
-      <button class="tabbtn active" id="tabUser" onclick="switchLoginTab('user')">User Login</button>
-      <button class="tabbtn" id="tabAdmin" onclick="switchLoginTab('admin')">Admin Login</button>
-    </div>
-
-    <div id="userLoginForm" style="margin-top:15px;">
-      <div class="form-group">
-        <label>Username</label>
-        <input type="text" id="loginUser" placeholder="បញ្ចូល Username..." autocomplete="off" autocapitalize="off" spellcheck="false">
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="loginPass" placeholder="បញ្ចូល Password...">
-      </div>
-      <button class="btn-action" onclick="doUserLogin()">ចូល (User Login)</button>
-      <div class="muted" style="margin-top: 15px; text-align: center;">
-        មិនទាន់មានគណនី? <a class="link-btn" onclick="toggleRegister(true)">បង្កើតថ្មីទីនេះ (Register)</a>
-      </div>
-    </div>
-
-    <div id="userRegisterForm" style="margin-top:15px; display:none;">
-      <div class="form-group">
-        <label>Username ថ្មី</label>
-        <input type="text" id="regUser" placeholder="បញ្ចូល Username ថ្មី..." autocomplete="off" autocapitalize="off" spellcheck="false">
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="regPass" placeholder="បញ្ចូល Password...">
-      </div>
-      <div class="form-group">
-        <label>បញ្ជាក់ Password</label>
-        <input type="password" id="regPassConfirm" placeholder="បញ្ចូល Password ម្តងទៀត...">
-      </div>
-      <button class="btn-action" onclick="doUserRegister()" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">បង្កើតគណនី (Sign Up)</button>
-      <div class="muted" style="margin-top: 15px; text-align: center;">
-        មានគណនីរួចហើយ? <a class="link-btn" onclick="toggleRegister(false)">ចូលប្រើប្រាស់ទីនេះ (Login)</a>
-      </div>
-    </div>
-
-    <div id="adminLoginForm" style="margin-top:15px; display:none;">
-      <div class="form-group">
-        <label>Admin Password</label>
-        <input type="password" id="adminPass" placeholder="បញ្ចូល Admin Password...">
-      </div>
-      <button class="btn-action" onclick="doAdminLogin()">ចូល (Admin Login)</button>
-    </div>
-  </div>
-
-  <div class="container" id="adminPage">
-    <div class="topbar">
-      <div class="user-badge">🛠️ Admin Panel</div>
-      <button class="btn-logout" onclick="logoutAdmin()">ចាកចេញ (Logout)</button>
-    </div>
-
-    <h1 class="rainbow-text" style="margin-top:0;">គ្រប់គ្រង User</h1>
-
-    <div class="admin-box">
-      <b>1) បន្ថែម User ថ្មី</b>
-      <div class="form-group" style="margin-top:10px;">
-        <label>Username ថ្មី</label>
-        <input type="text" id="newUser" placeholder="ឧ: User01">
-      </div>
-      <div class="form-group">
-        <label>Password ថ្មី</label>
-        <input type="text" id="newPass" placeholder="បញ្ចូល Password..." autocomplete="off">
-      </div>
-      <button class="btn-copy" onclick="addUser()">+ បន្ថែម User</button>
-    </div>
-
-    <div class="admin-box">
-      <b>2) កែប្រែ Password User</b>
-      <div class="form-group" style="margin-top:10px;">
-        <label>ជ្រើសរើស Username</label>
-        <select id="editUserSelect"></select>
-      </div>
-      <div class="form-group">
-        <label>Password ថ្មី</label>
-        <input type="text" id="editPass" placeholder="បញ្ចូល Password ថ្មី..." autocomplete="off">
-      </div>
-      <button class="btn-copy" onclick="updateUserPassword()">✅ កែប្រែ Password</button>
-    </div>
-
-    <div class="admin-box">
-      <b>3) បញ្ជី Users</b>
-      <div class="muted" style="text-align: left; margin-top: 5px;">ចំណាំ៖ គណនីដែល User បង្កើតដោយខ្លួនឯង ក៏នឹងបង្ហាញនៅទីនេះដែរ។</div>
-      <div id="userTableWrap"></div>
-    </div>
-
-    <div class="admin-box">
-      <b style="color: #764ba2;">4) ប្រវត្តិអ្នកចូលប្រើ (Login Logs)</b>
-      <div class="muted" style="margin-top: 5px; text-align: left;">ទិន្នន័យទាញយកពី Google Sheet ផ្ទាល់។</div>
-      <button class="smallbtn" onclick="fetchLoginLogs()" style="margin-top: 10px; width: 100%;">🔄 ចុចទីនេះដើម្បីទាញយកប្រវត្តិ</button>
-      <div id="logTableWrap" style="margin-top: 10px; max-height: 250px; overflow-y: auto;">
-         <div style="text-align:center; padding: 10px; color: #888;">មិនទាន់បានទាញយកទិន្នន័យទេ</div>
-      </div>
-    </div>
-
-    <button class="btn-action" onclick="goToUserLogin()" style="background: #888;">ត្រឡប់ទៅ User Login</button>
-  </div>
-
   <div class="container" id="appPage">
-    <div class="topbar">
-      <div class="user-badge" id="userBadge"></div>
-      <button class="btn-logout" onclick="logoutUser()">ចាកចេញ (Logout)</button>
-    </div>
-
     <h1 class="rainbow-text" style="margin-top:0;">ស្រង់របាយការណ៍តាមក្រុម</h1>
 
     <div class="form-group">
@@ -403,23 +263,6 @@
   </div>
 
   <script>
-    /* ========= STORAGE KEYS ========= */
-    const USER_KEY = "appUsers";              
-    const AUTH_USER_KEY = "isLoggedIn";       
-    const LOGGED_USER_KEY = "loggedUser";     
-    const AUTH_ADMIN_KEY = "isAdminLoggedIn"; 
-
-    // ✅ កន្លែងដាក់ Link ពី Google Apps Script ដើម្បីចាប់ប្រវត្តិអ្នក Login
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbybdQWECR0kphu4xj6V4EZY1IujeY9GxfSEHY6YdHW1WkDMRE225tan7HMc7ydL88Dw/exec"; 
-
-    function clearLoginInputs() {
-      const ids = ["loginUser", "loginPass", "adminPass", "newPass", "editPass", "regUser", "regPass", "regPassConfirm"];
-      ids.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = "";
-      });
-    }
-
     function clearReportView() {
       const container = document.getElementById("reportContainer");
       const footer = document.getElementById("reportFooter");
@@ -428,273 +271,13 @@
       lines.forEach(line => line.remove());
     }
 
-    function seedDefaultUserIfNeeded() {
-      const raw = localStorage.getItem(USER_KEY);
-      if (!raw) {
-        const users = [{ username: "Thol2903", password: "12345" }];
-        localStorage.setItem(USER_KEY, JSON.stringify(users));
-      }
-    }
-    function getUsers() {
-      const raw = localStorage.getItem(USER_KEY);
-      return raw ? JSON.parse(raw) : [];
-    }
-    function setUsers(users) {
-      localStorage.setItem(USER_KEY, JSON.stringify(users));
-    }
-
-    function showPage(pageId) {
-      document.getElementById("loginPage").style.display = "none";
-      document.getElementById("adminPage").style.display = "none";
-      document.getElementById("appPage").style.display = "none";
-      document.getElementById(pageId).style.display = "block";
-    }
-
-    function toggleRegister(showReg) {
-      clearLoginInputs();
-      document.getElementById('userLoginForm').style.display = showReg ? 'none' : 'block';
-      document.getElementById('userRegisterForm').style.display = showReg ? 'block' : 'none';
-    }
-
-    function switchLoginTab(tab) {
-      clearLoginInputs();
-      const tabUser = document.getElementById("tabUser");
-      const tabAdmin = document.getElementById("tabAdmin");
-      const userForm = document.getElementById("userLoginForm");
-      const adminForm = document.getElementById("adminLoginForm");
-      const regForm = document.getElementById("userRegisterForm");
-
-      if (tab === "user") {
-        tabUser.classList.add("active");
-        tabAdmin.classList.remove("active");
-        userForm.style.display = "block";
-        regForm.style.display = "none";
-        adminForm.style.display = "none";
-      } else {
-        tabAdmin.classList.add("active");
-        tabUser.classList.remove("active");
-        adminForm.style.display = "block";
-        userForm.style.display = "none";
-        regForm.style.display = "none";
-      }
-    }
-
-    function doUserRegister() {
-      const u = document.getElementById("regUser").value.trim();
-      const p = document.getElementById("regPass").value;
-      const pConf = document.getElementById("regPassConfirm").value;
-
-      if (!u || !p || !pConf) { alert("សូមបំពេញព័ត៌មានអោយបានគ្រប់គ្រាន់!"); return; }
-      if (p !== pConf) { alert("❌ Password មិនផ្ទៀងផ្ទាត់គ្នាទេ!"); return; }
-
-      seedDefaultUserIfNeeded();
-      const users = getUsers();
-      const exists = users.some(x => x.username.toLowerCase() === u.toLowerCase());
-
-      if (exists) {
-        alert("❌ Username នេះមានគេប្រើរួចហើយ! សូមជ្រើសរើសឈ្មោះផ្សេង។");
-        return;
-      }
-
-      users.push({ username: u, password: p });
-      setUsers(users);
-
-      alert("✅ បង្កើតគណនីបានជោគជ័យ! សូម Login ចូលប្រើប្រាស់។");
-      toggleRegister(false);
-    }
-
-    function doUserLogin() {
-      const u = document.getElementById("loginUser").value.trim();
-      const p = document.getElementById("loginPass").value;
-
-      if (!u) { alert("សូមបញ្ចូល Username ជាមុនសិន!"); return; }
-      if (!p) { alert("សូមបញ្ចូល Password ជាមុនសិន!"); return; }
-
-      seedDefaultUserIfNeeded();
-      const ok = getUsers().some(x => x.username === u && x.password === p);
-
-      if (!ok) {
-        alert("❌ Username ឬ Password មិនត្រឹមត្រូវ!");
-        document.getElementById("loginPass").value = "";
-        return;
-      }
-
-      localStorage.setItem(AUTH_USER_KEY, "true");
-      localStorage.setItem(LOGGED_USER_KEY, u);
-      
-      // ✅ ផ្ញើឈ្មោះអ្នកដែលទើបតែ Login ទៅ Google Sheet តាមរយៈ Web App URL
-      if(!GAS_WEB_APP_URL.includes("YOUR_WEB_APP_LINK_HERE")) {
-        fetch(GAS_WEB_APP_URL + "?action=login&username=" + encodeURIComponent(u), { mode: 'no-cors' })
-          .catch(err => console.log("Login tracking failed: ", err));
-      }
-
-      clearLoginInputs();
-      initAppAfterLogin();
-      showApp();
-    }
-
-    function showApp() {
-      showPage("appPage");
-      const u = localStorage.getItem(LOGGED_USER_KEY) || "";
-      document.getElementById("userBadge").innerText = u ? ("👤 " + u) : "";
-    }
-
-    function logoutUser() {
-      localStorage.removeItem(AUTH_USER_KEY);
-      localStorage.removeItem(LOGGED_USER_KEY);
-      clearLoginInputs();
-      clearReportView();
-      showPage("loginPage");
-      switchLoginTab("user");
-    }
-
-    /* ========= ADMIN LOGIN ========= */
-    function doAdminLogin() {
-      const adminPass = document.getElementById("adminPass").value;
-      if (!adminPass) { alert("សូមបញ្ចូល Admin Password!"); return; }
-
-      if (adminPass !== "123123") {
-        alert("❌ Admin Password មិនត្រឹមត្រូវ!");
-        document.getElementById("adminPass").value = "";
-        return;
-      }
-
-      localStorage.setItem(AUTH_ADMIN_KEY, "true");
-      clearLoginInputs();
-      showAdmin();
-    }
-
-    function showAdmin() {
-      showPage("adminPage");
-      refreshAdminUI();
-    }
-
-    function logoutAdmin() {
-      localStorage.removeItem(AUTH_ADMIN_KEY);
-      clearLoginInputs();
-      showPage("loginPage");
-      switchLoginTab("admin");
-    }
-
-    function goToUserLogin() {
-      showPage("loginPage");
-      switchLoginTab("user");
-    }
-
-    /* ========= ADMIN FUNCTIONS ========= */
-    function refreshAdminUI() {
-      seedDefaultUserIfNeeded();
-
-      const sel = document.getElementById("editUserSelect");
-      sel.innerHTML = "";
-      getUsers().forEach(u => {
-        const opt = document.createElement("option");
-        opt.value = u.username;
-        opt.textContent = u.username;
-        sel.appendChild(opt);
-      });
-
-      renderUserTable();
-      
-      const logWrap = document.getElementById("logTableWrap");
-      if(logWrap) logWrap.innerHTML = "<div style='text-align:center; padding: 10px; color: #888;'>មិនទាន់បានទាញយកទិន្នន័យទេ</div>";
-    }
-
-    function addUser() {
-      const username = document.getElementById("newUser").value.trim();
-      const password = document.getElementById("newPass").value;
-
-      if (!username || !password) { alert("សូមបញ្ចូល Username និង Password ថ្មី!"); return; }
-
-      const users = getUsers();
-      if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
-        alert("❌ Username នេះមានរួចហើយ!"); return;
-      }
-
-      users.push({ username, password });
-      setUsers(users);
-      document.getElementById("newUser").value = "";
-      document.getElementById("newPass").value = "";
-      alert("✅ បានបន្ថែម User រួចរាល់!");
-      refreshAdminUI();
-    }
-
-    function updateUserPassword() {
-      const username = document.getElementById("editUserSelect").value;
-      const newPass = document.getElementById("editPass").value;
-
-      if (!username) { alert("សូមជ្រើសរើស Username!"); return; }
-      if (!newPass) { alert("សូមបញ្ចូល Password ថ្មី!"); return; }
-
-      const users = getUsers().map(u => {
-        if (u.username === username) return { ...u, password: newPass };
-        return u;
-      });
-      setUsers(users);
-      document.getElementById("editPass").value = "";
-      alert("✅ បានកែប្រែ Password រួចរាល់!");
-      refreshAdminUI();
-    }
-
-    function deleteUser(username) {
-      if (!confirm(`ចង់លុប User "${username}" មែនទេ?`)) return;
-      const users = getUsers().filter(u => u.username !== username);
-      if (users.length === 0) { alert("មិនអាចលុបអស់ទាំងអស់បានទេ! (យ៉ាងតិចមាន 1 user)"); return; }
-      setUsers(users);
-      alert("✅ បានលុប User រួចរាល់!");
-      refreshAdminUI();
-    }
-
-    function renderUserTable() {
-      const users = getUsers();
-      const wrap = document.getElementById("userTableWrap");
-
-      let html = `<table>
-        <thead><tr><th>Username</th><th>Password</th><th>Action</th></tr></thead><tbody>`;
-      users.forEach(u => {
-        html += `<tr>
-          <td>${escapeHtml(u.username)}</td>
-          <td>${escapeHtml(u.password)}</td>
-          <td><button class="smallbtn danger" onclick="deleteUser('${escapeAttr(u.username)}')">លុប</button></td>
-        </tr>`;
-      });
-      html += `</tbody></table>`;
-      wrap.innerHTML = html;
-    }
-
-    function escapeHtml(str) { return String(str).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;"); }
     function escapeAttr(str) {
       if(!str) return "";
       return String(str).replaceAll("\\", "\\\\").replaceAll("'", "\\'").replaceAll('"', "&quot;");
     }
 
-    function fetchLoginLogs() {
-      const wrap = document.getElementById("logTableWrap");
-      if(GAS_WEB_APP_URL.includes("YOUR_WEB_APP_LINK_HERE")) {
-        wrap.innerHTML = "<div style='color:#ff4757; text-align:center;'>❌ សូមដាក់ Link Web App ក្នុងកូដជាមុនសិន!</div>";
-        return;
-      }
-      wrap.innerHTML = "<div style='text-align:center; color:#764ba2;'>កំពុងទាញយកទិន្នន័យ... ⏳</div>";
-      
-      fetch(GAS_WEB_APP_URL + "?action=getLogs")
-        .then(res => res.json())
-        .then(data => {
-          if(!data || data.length === 0) {
-            wrap.innerHTML = "<div style='text-align:center;'>មិនទាន់មាននរណាម្នាក់ Login ទេ។</div>"; return;
-          }
-          let html = `<table><thead><tr><th>ម៉ោង & កាលបរិច្ឆេទ</th><th>Username</th></tr></thead><tbody>`;
-          data.forEach(row => {
-            html += `<tr><td style="font-size: 13px; color: #555;">${row.time}</td><td><b>${row.user}</b></td></tr>`;
-          });
-          html += `</tbody></table>`;
-          wrap.innerHTML = html;
-        })
-        .catch(err => {
-           wrap.innerHTML = "<div style='color:#ff4757; text-align:center;'>❌ បរាជ័យក្នុងការទាញយក! សូមពិនិត្យមើលសិទ្ធិ (Anyone)។</div>";
-        });
-    }
-
     /* ========= GOOGLE SHEET INTEGRATION ========= */
+    // ⚠️ កុំភ្លេចដាក់ Link CSV ពី Google Sheet របស់អ្នកពិតប្រាកដនៅទីនេះ
     const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1okm-8WnOJ5I4AsBIRTp1stxAPTTBiMn1H6_Zhw0f9Lk/export?format=csv"; 
     let allSheetData = [];
 
@@ -711,7 +294,8 @@
 
     function splitCSVRow(str) {
       const result = [];
-      let current = ''; let inQuotes = false;
+      let current = '';
+      let inQuotes = false;
       for (let i = 0; i < str.length; i++) {
         if (str[i] === '"') inQuotes = !inQuotes;
         else if (str[i] === ',' && !inQuotes) { result.push(current); current = ''; }
@@ -807,7 +391,6 @@
         }
       }
 
-      // អនុញ្ញាតឲ្យបង្ហាញប្រអប់បន្ថែមទោះបីជាវាយក្រុមថ្មី ដែលមិនទាន់មានសមាជិកក៏ដោយ
       if (members.length === 0) {
         memberBox.innerHTML = `<div style="text-align:center; padding:10px; color:#888;">មិនទាន់មានសមាជិកក្នុង <b>${selectedGroup}</b> ទេ! សូមបន្ថែមនៅខាងក្រោម។</div>`;
         memberBox.style.display = 'block';
@@ -922,40 +505,15 @@
 
     /* ========= APP INIT ========= */
     window.onload = function() {
-      seedDefaultUserIfNeeded();
-      localStorage.removeItem(AUTH_ADMIN_KEY);
-
-      const isUser = localStorage.getItem(AUTH_USER_KEY) === "true";
-
-      if (isUser) {
-        showApp();
-        initAppAfterLogin();
-        return;
-      }
-      showPage("loginPage");
-      switchLoginTab("user");
+      initApp();
     };
 
-    function initAppAfterLogin() {
+    function initApp() {
       updateHeader();
       clearReportView();
       loadFromLocalStorage();
       fetchSheetData(); 
     }
-
-    document.addEventListener("keydown", (e) => {
-      const loginVisible = document.getElementById("loginPage").style.display !== "none";
-      if (!loginVisible) return;
-
-      if (e.key === "Enter") {
-        const adminFormVisible = document.getElementById("adminLoginForm").style.display !== "none";
-        const regFormVisible = document.getElementById("userRegisterForm").style.display !== "none";
-        
-        if (adminFormVisible) doAdminLogin();
-        else if (regFormVisible) doUserRegister();
-        else doUserLogin();
-      }
-    });
 
     /* ========= REPORT FUNCTIONS ========= */
     function updateHeader() {
@@ -971,7 +529,6 @@
       let exactGroup = allSheetData.find(m => m.group.toLowerCase() === groupValue.toLowerCase() || m.group.toLowerCase() === ("ក្រុម " + groupValue).toLowerCase());
       
       if (!exactGroup) {
-        // អនុញ្ញាតឲ្យ Submit បើគាត់បង្កើតក្រុមថ្មីសុទ្ធ
         exactGroup = { group: groupValue.startsWith("ក្រុម") ? groupValue : "ក្រុម " + groupValue };
       }
       const selectedGroup = exactGroup.group;
@@ -1043,16 +600,12 @@
       const lines = document.querySelectorAll('.report-line .text-content');
       let dataToSave = [];
       lines.forEach(line => dataToSave.push(line.innerHTML));
-      
-      const currentUser = localStorage.getItem(LOGGED_USER_KEY) || "unknown";
-      localStorage.setItem('myReportData_' + currentUser, JSON.stringify(dataToSave));
+      localStorage.setItem('myReportData_default', JSON.stringify(dataToSave));
     }
 
     function loadFromLocalStorage() {
       clearReportView();
-
-      const currentUser = localStorage.getItem(LOGGED_USER_KEY) || "unknown";
-      const savedData = localStorage.getItem('myReportData_' + currentUser);
+      const savedData = localStorage.getItem('myReportData_default');
       
       if (savedData) {
         const reports = JSON.parse(savedData);
@@ -1094,5 +647,3 @@
   </script>
 </body>
 </html>
-
-```
